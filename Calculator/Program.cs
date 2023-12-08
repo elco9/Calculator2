@@ -6,6 +6,8 @@ class Calculator
 
     static void Main()
     {
+        double num1 = 0; // Initialize num1 to store the result
+
         while (true)
         {
             Console.Clear();
@@ -14,19 +16,48 @@ class Calculator
             Console.SetCursorPosition(1, 14);  // Set cursor position for the welcome message
             Console.Write("Welcome to The Calculator(tm)");
 
-            Console.SetCursorPosition(2, 4);  // Set cursor position for the first number
-            double num1 = GetNumber();
+            if (whichNumber == 1)
+            {
+                Console.SetCursorPosition(2, 4);  // Set cursor position for the first number
+                num1 = GetNumber();
+            }
 
-            Console.SetCursorPosition(2, 6);  // Set cursor position for the operator
             char op = GetOperator();
 
-            Console.SetCursorPosition(2, 8);  // Set cursor position for the second number
-            double num2 = GetNumber();
+            while (true)
+            {
+                Console.SetCursorPosition(1, 1);  // Set cursor position for the result/first number
+                Console.Write(num1);
 
-            double result = PerformCalculation(num1, op, num2);
+                Console.SetCursorPosition(1, 2);  // Set cursor position for the operator
+                Console.Write(op);
 
-            Console.SetCursorPosition(2, 4);  // Set cursor position for the result line
-            Console.Write($"{result,22}");
+                Console.SetCursorPosition(1, 3);  // Set cursor position for the new number
+                double num2 = GetNumber();
+
+                num1 = PerformCalculation(num1, op, num2);
+
+                Console.SetCursorPosition(2, 4);  // Set cursor position for the result line
+                Console.Write($"{num1,22}");
+
+                Console.SetCursorPosition(2, 15);  // Set cursor position for the prompt
+                Console.Write("Press Enter to continue or an operator to start a new calculation...");
+
+                var keyInfo = Console.ReadKey(true);
+
+                if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    ClearLines(3, 3); // Clear lines 3 to 3 (user input)
+                    break;
+                }
+                else if (keyInfo.KeyChar == '+' || keyInfo.KeyChar == '-' || keyInfo.KeyChar == '*' || keyInfo.KeyChar == '/')
+                {
+                    ClearLines(3, 3); // Clear lines 3 to 3 (user input)
+                    op = keyInfo.KeyChar;
+                }
+            }
+
+            whichNumber++; // Increment whichNumber after the first iteration
 
             if (!MoreCalculations())
             {
@@ -98,7 +129,7 @@ class Calculator
             }
         }
     }
-
+    //Performing the calculations based on input
     static double PerformCalculation(double num1, char op, double num2)
     {
         switch (op)
@@ -144,5 +175,14 @@ class Calculator
 
         whichNumber = 1; // Reset whichNumber for the next iteration
         return key == 'y';
+    }
+    // Method to clear specific lines on the console
+    static void ClearLines(int startLine, int endLine)
+    {
+        for (int i = startLine; i <= endLine; i++)
+        {
+            Console.SetCursorPosition(1, i);
+            Console.Write(new string(' ', Console.WindowWidth));
+        }
     }
 }
